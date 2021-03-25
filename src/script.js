@@ -1,8 +1,7 @@
 import './style.css'
 import * as THREE from 'three'
-import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'dat.gui'
-import {RectAreaLightHelper} from "three/examples/jsm/helpers/RectAreaLightHelper";
 
 /**
  * Base
@@ -17,92 +16,46 @@ const canvas = document.querySelector('canvas.webgl')
 const scene = new THREE.Scene()
 
 /**
- * Lights
+ * Textures
  */
-const ambientLight = new THREE.AmbientLight(0xffffff, 0)
-scene.add(ambientLight)
-
-const directionalLight = new THREE.DirectionalLight(0x00fffc, 0.3)
-directionalLight.position.set(1, 0.25, 0)
-scene.add(directionalLight)
-
-const hemisphereLight = new THREE.HemisphereLight(0xff0000, 0x0000ff, 0.3)
-scene.add(hemisphereLight)
-
-const pointLight = new THREE.PointLight(0xff9000, 0.5, 10)
-pointLight.position.set(1, -0.5, 0)
-scene.add(pointLight)
-
-const rectAreaLight = new THREE.RectAreaLight(0x4e00ff, 2, 1, 2)
-rectAreaLight.position.set(-1.5, 0, 1.5)
-rectAreaLight.lookAt(new THREE.Vector3())
-scene.add(rectAreaLight)
-
-const spotLight = new THREE.SpotLight(0x78ff00, 0.5, 10, Math.PI * 0.1, 0.1, 1)
-spotLight.position.set(0, 2, 3)
-scene.add(spotLight)
-
-gui.add(ambientLight, 'intensity', 0, 1, 0.01)
-gui.add(directionalLight.position, 'x', 0, 4, 0.001,)
-
-// Helpers
-const hemisphereLightHelper = new THREE.HemisphereLightHelper(hemisphereLight, 0.2)
-scene.add(hemisphereLightHelper)
-
-const pointLightHelper = new THREE.PointLightHelper(pointLight, 0.2)
-scene.add(pointLightHelper)
-
-const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 0.2);
-scene.add(directionalLightHelper)
-
-const spotLightHelper = new THREE.SpotLightHelper(spotLight)
-scene.add(spotLightHelper)
-
-const rectAreaLightHelper = new RectAreaLightHelper(rectAreaLight)
-scene.add(rectAreaLightHelper)
-
-window.requestAnimationFrame(() => {
-  rectAreaLightHelper.position.copy(rectAreaLight.position)
-  rectAreaLightHelper.quaternion.copy(rectAreaLight.quaternion)
-  // rectAreaLightHelper.position.x = rectAreaLight.position.x
-  // rectAreaLightHelper.position.y = rectAreaLight.position.y
-  // rectAreaLightHelper.position.z = rectAreaLight.position.z
-  rectAreaLightHelper.update()
-})
+const textureLoader = new THREE.TextureLoader()
 
 /**
- * Objects
+ * House
  */
-// Material
-const material = new THREE.MeshStandardMaterial()
-material.roughness = 0.4
-
-// Objects
+// Temporary sphere
 const sphere = new THREE.Mesh(
-    new THREE.SphereBufferGeometry(0.5, 32, 32),
-    material
+    new THREE.SphereBufferGeometry(1, 32, 32),
+    new THREE.MeshStandardMaterial({ roughness: 0.7 })
 )
-sphere.position.x = -1.5
+sphere.position.y = 1
+scene.add(sphere)
 
-const cube = new THREE.Mesh(
-    new THREE.BoxBufferGeometry(0.75, 0.75, 0.75),
-    material
+// Floor
+const floor = new THREE.Mesh(
+    new THREE.PlaneBufferGeometry(20, 20),
+    new THREE.MeshStandardMaterial({ color: '#a9c388' })
 )
+floor.rotation.x = - Math.PI * 0.5
+floor.position.y = 0
+scene.add(floor)
 
-const torus = new THREE.Mesh(
-    new THREE.TorusBufferGeometry(0.3, 0.2, 32, 64),
-    material
-)
-torus.position.x = 1.5
+/**
+ * Lights
+ */
+// Ambient light
+const ambientLight = new THREE.AmbientLight('#ffffff', 0.5)
+gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001).name('ambIntens')
+scene.add(ambientLight)
 
-const plane = new THREE.Mesh(
-    new THREE.PlaneBufferGeometry(5, 5),
-    material
-)
-plane.rotation.x = -Math.PI * 0.5
-plane.position.y = -0.65
-
-scene.add(sphere, cube, torus, plane)
+// Directional light
+const moonLight = new THREE.DirectionalLight('#ffffff', 0.5)
+moonLight.position.set(4, 5, - 2)
+gui.add(moonLight, 'intensity').min(0).max(1).step(0.001).name('dirIntens(moon)')
+gui.add(moonLight.position, 'x').min(- 5).max(5).step(0.001)
+gui.add(moonLight.position, 'y').min(- 5).max(5).step(0.001)
+gui.add(moonLight.position, 'z').min(- 5).max(5).step(0.001)
+scene.add(moonLight)
 
 /**
  * Sizes
@@ -112,7 +65,8 @@ const sizes = {
   height: window.innerHeight
 }
 
-window.addEventListener('resize', () => {
+window.addEventListener('resize', () =>
+{
   // Update sizes
   sizes.width = window.innerWidth
   sizes.height = window.innerHeight
@@ -131,9 +85,9 @@ window.addEventListener('resize', () => {
  */
 // Base camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-camera.position.x = 1
-camera.position.y = 1
-camera.position.z = 2
+camera.position.x = 4
+camera.position.y = 2
+camera.position.z = 5
 scene.add(camera)
 
 // Controls
@@ -154,17 +108,9 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
  */
 const clock = new THREE.Clock()
 
-const tick = () => {
+const tick = () =>
+{
   const elapsedTime = clock.getElapsedTime()
-
-  // Update objects
-  sphere.rotation.y = 0.1 * elapsedTime
-  cube.rotation.y = 0.1 * elapsedTime
-  torus.rotation.y = 0.1 * elapsedTime
-
-  sphere.rotation.x = 0.15 * elapsedTime
-  cube.rotation.x = 0.15 * elapsedTime
-  torus.rotation.x = 0.15 * elapsedTime
 
   // Update controls
   controls.update()
