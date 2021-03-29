@@ -7,17 +7,13 @@ module.exports = {
     entry: path.resolve(__dirname, '../src/script16(HauntedHouse).js'),
     output:
     {
-        filename: 'bundle.[contenthash].js',
+        filename: 'bundle.[hash].js',
         path: path.resolve(__dirname, '../dist')
     },
     devtool: 'source-map',
     plugins:
     [
-        new CopyWebpackPlugin({
-            patterns: [
-                { from: path.resolve(__dirname, '../static') }
-            ]
-        }),
+        new CopyWebpackPlugin([ { from: path.resolve(__dirname, '../static') } ]),
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, '../src/index.html'),
             minify: true
@@ -81,6 +77,15 @@ module.exports = {
                             outputPath: 'assets/fonts/'
                         }
                     }
+                ]
+            },
+            // Shaders
+            {
+                test: /\.(glsl|vs|fs|vert|frag)$/,
+                exclude: /node_modules/,
+                use: [
+                    'raw-loader',
+                    'glslify-loader'
                 ]
             }
         ]
