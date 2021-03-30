@@ -2,7 +2,6 @@ import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'dat.gui'
-import math from "dat.gui/src/dat/color/math";
 
 /**
  * Base
@@ -24,23 +23,23 @@ scene.fog = fog
  * Textures
  */
 const textureLoader = new THREE.TextureLoader()
-const doorColorTexture = textureLoader.load('/textures/door/color.jpg')
-const doorAlphaTexture = textureLoader.load('/textures/door/alpha.jpg')
-const doorAmbientOcclusionTexture = textureLoader.load('/textures/door/ambientOcclusion.jpg')
-const doorHeightTexture = textureLoader.load('/textures/door/height.jpg')
-const doorNormalTexture = textureLoader.load('/textures/door/normal.jpg')
-const doorMetalnessTexture = textureLoader.load('/textures/door/metalness.jpg')
-const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg')
+const doorColorTexture = textureLoader.load(require('../static/textures/door/color.jpg').default)
+const doorAlphaTexture = textureLoader.load(require('../static/textures/door/alpha.jpg').default)
+const doorAmbientOcclusionTexture = textureLoader.load(require('../static/textures/door/ambientOcclusion.jpg').default)
+const doorHeightTexture = textureLoader.load(require('../static/textures/door/height.jpg').default)
+const doorNormalTexture = textureLoader.load(require('../static/textures/door/normal.jpg').default)
+const doorMetalnessTexture = textureLoader.load(require('../static/textures/door/metalness.jpg').default)
+const doorRoughnessTexture = textureLoader.load(require('../static/textures/door/roughness.jpg').default)
 
-const bricksColorTexture = textureLoader.load('/textures/bricks/color.jpg')
-const bricksAmbientOcclusionTexture = textureLoader.load('/textures/bricks/ambientOcclusion.jpg')
-const bricksNormalTexture = textureLoader.load('/textures/bricks/normal.jpg')
-const bricksRoughnessTexture = textureLoader.load('/textures/bricks/roughness.jpg')
+const bricksColorTexture = textureLoader.load(require('../static/textures/bricks/color.jpg').default)
+const bricksAmbientOcclusionTexture = textureLoader.load(require('../static/textures/bricks/ambientOcclusion.jpg').default)
+const bricksNormalTexture = textureLoader.load(require('../static/textures/bricks/normal.jpg').default)
+const bricksRoughnessTexture = textureLoader.load(require('../static/textures/bricks/roughness.jpg').default)
 
-const grassColorTexture = textureLoader.load('/textures/grass/color.jpg')
-const grassAmbientOcclusionTexture = textureLoader.load('/textures/grass/ambientOcclusion.jpg')
-const grassNormalTexture = textureLoader.load('/textures/grass/normal.jpg')
-const grassRoughnessTexture = textureLoader.load('/textures/grass/roughness.jpg')
+const grassColorTexture = textureLoader.load(require('../static/textures/grass/color.jpg').default)
+const grassAmbientOcclusionTexture = textureLoader.load(require('../static/textures/grass/ambientOcclusion.jpg').default)
+const grassNormalTexture = textureLoader.load(require('../static/textures/grass/normal.jpg').default)
+const grassRoughnessTexture = textureLoader.load(require('../static/textures/grass/roughness.jpg').default)
 
 grassColorTexture.repeat.set(8, 8)
 grassAmbientOcclusionTexture.repeat.set(8, 8)
